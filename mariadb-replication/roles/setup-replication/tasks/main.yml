@@ -1,0 +1,28 @@
+# roles/setup-replication/task/main.yml
+
+- name: Update DNF package cache
+  dnf:
+    name: "*"
+    state: latest
+
+- name: Install package python3
+  dnf:
+    name: python3
+    state: present
+
+- name: Upgrade pip
+  command: "pip3 install --upgrade pip"
+
+- name: Install pymysql using pip3
+  pip:
+    name: pymysql
+    executable: pip3
+    state: present
+
+- name: Setup Master server
+  import_tasks: setup-master-server.yml
+  when: "'master-server' in group_names"
+
+- name: Setup Slave server
+  import_tasks: setup-slave-server.yml
+  when: "'slave-servers' in group_names"

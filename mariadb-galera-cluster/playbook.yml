@@ -1,0 +1,10 @@
+# playbook.yml
+
+---
+- name: Setup MariaDB Galera Cluster
+  hosts: mariadb-servers
+  gather_facts: false
+  become: yes
+  roles:
+    - setup-mariadb-server
+    - setup-galera-cluster

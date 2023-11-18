@@ -1,0 +1,7 @@
+# roles/setup-galera-cluster/defaults/main.yml
+
+config_path: /etc/my.cnf.d/galera.cnf
+
+wsrep_cluster_name: mariadb
+wsrep_cluster_address: "gcomm://{{ groups['mariadb-servers'] | map('extract', hostvars, 'ansible_ssh_host') | join(',') }}"
+wsrep_node_address: "{{ ansible_ssh_host }}"

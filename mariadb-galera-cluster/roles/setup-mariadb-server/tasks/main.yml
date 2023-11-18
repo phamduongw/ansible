@@ -1,0 +1,35 @@
+# roles/setup-mariadb-server/task/main.yml
+
+- name: Update DNF package cache
+  dnf:
+    name: "*"
+    state: latest
+
+- name: Install package mariadb-server-galera
+  dnf:
+    name: mariadb-server-galera
+    state: present
+
+- name: Create data and binary log directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: mysql
+    group: mysql
+    recurse: yes
+  loop:
+    - "{{ data_dir }}"
+    - "{{ binlog_dir }}"
+
+- name: Create MariaDB configuration file
+  template:
+    src: server.cnf.j2
+    dest: "{{ config_path }}"
+    owner: mysql
+    group: mysql
+
+- name: Start the MariaDB service
+  service:
+    name: mariadb
+    state: started
+    enabled: yes

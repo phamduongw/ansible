@@ -1,0 +1,7 @@
+# roles/setup-replication/defaults/main.yml
+
+master_host: "{{ groups['master-server'][0] }}"
+master_user: root
+
+replication_user: root
+replication_password: oracle_4U

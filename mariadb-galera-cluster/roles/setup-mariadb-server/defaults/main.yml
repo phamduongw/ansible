@@ -1,0 +1,12 @@
+# roles/setup-mariadb-server/defaults/main.yml
+
+config_path: /etc/my.cnf.d/server.cnf
+
+data_dir: /var/lib/mysql
+binlog_dir: /var/log/mysql
+
+socket: "{{ data_dir }}/mysql.sock"
+port: 3306
+
+log_error: "{{ binlog_dir }}/mysqld.error.log"
+log_bin_index: "{{ binlog_dir }}/mariadb-bin.index"

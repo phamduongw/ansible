@@ -1,0 +1,23 @@
+# roles/setup-galera-cluster/task/main.yml
+
+- name: Stop the MariaDB service
+  systemd:
+    name: mariadb
+    state: stopped
+
+- name: Create MariaDB Galera Cluster configuration file
+  template:
+    src: galera.cnf.j2
+    dest: "{{ config_path }}"
+    owner: mysql
+    group: mysql
+
+- name: Initialize Galera Cluster on the random node
+  command: galera_new_cluster
+  when: inventory_hostname == groups['mariadb-servers'][0]
+
+- name: Start the MariaDB service on the remaining nodes
+  systemd:
+    name: mariadb
+    state: started
+  when: inventory_hostname != groups['mariadb-servers'][0]

@@ -1,0 +1,19 @@
+# playbook.yml
+
+---
+- name: Setup MariaDB Replication
+  hosts: mariadb-servers
+  gather_facts: false
+  become: yes
+  vars_files:
+    - group-vars/mariadb-servers.yml
+
+  pre_tasks:
+    - name: Set ansible_python_interpreter for hosts in 'ansible-server' group
+      set_fact:
+        ansible_python_interpreter: "/usr/bin/python3"
+      when: "'ansible-server' in group_names"
+
+  roles:
+    - setup-mariadb-server
+    - setup-replication

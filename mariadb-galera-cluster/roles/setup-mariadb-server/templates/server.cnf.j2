@@ -1,0 +1,42 @@
+# roles/setup-mariadb-server/templates/server.cnf.j2
+
+[client]
+socket = {{ socket }}
+
+[mysqld]
+socket = {{ socket }}
+port = {{ port }}
+bind_address = 0.0.0.0
+datadir = {{ data_dir }}
+skip_name_resolve
+max_connections = 5000
+log_error = {{ log_error }}
+log_bin = mariadb-bin
+log_bin_index = {{ log_bin_index }}
+gtid_strict_mode = 1
+binlog_format = ROW
+skip_external_locking
+binlog_annotate_row_events = OFF
+symbolic_links = 0
+innodb_buffer_pool_size = 26843545600
+innodb_buffer_pool_instances = 1
+innodb_buffer_pool_chunk_size = 134217728
+innodb_log_file_size = 256M
+innodb_log_buffer_size = 256M
+innodb_file_per_table = 1
+innodb_open_files = 2710
+innodb_max_dirty_pages_pct = 75
+innodb_flush_log_at_trx_commit = 0
+max_allowed_packet = 512M
+lower_case_table_names = 1
+autocommit = 0
+interactive_timeout = 1800
+wait_timeout = 1800
+
+[mysql_safe]
+log_error = {{ log_error }}
+max_binlog_size = 4096
+binlog_format = ROW
+
+[mysql]
+prompt = '\H [\d]>\_'

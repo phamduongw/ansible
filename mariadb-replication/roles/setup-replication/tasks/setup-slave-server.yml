@@ -1,0 +1,23 @@
+# roles/setup-replication/task/setup-slave-server.yml
+
+- name: Get primary binlog file name and binlog position
+  community.mysql.mysql_replication:
+    mode: getprimary
+    login_host: "{{ master_host }}"
+    login_user: "{{ replication_user }}"
+    login_password: "{{ replication_password }}"
+  register: master_status
+
+- name: Change Slave Configuration
+  community.mysql.mysql_replication:
+    mode: changeprimary
+    master_port: "{{ port }}"
+    master_host: "{{ master_host }}"
+    master_user: "{{ replication_user }}"
+    master_password: "{{ replication_password }}"
+    master_log_file: "{{ master_status.File }}"
+    master_log_pos: "{{ master_status.Position }}"
+
+- name: Start Slave
+  community.mysql.mysql_replication:
+    mode: startreplica

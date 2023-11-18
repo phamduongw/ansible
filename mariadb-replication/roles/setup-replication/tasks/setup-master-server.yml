@@ -1,0 +1,11 @@
+# roles/setup-replication/task/setup-master-server.yml
+
+- name: Grant replication permissions to slave servers
+  community.mysql.mysql_user:
+    login_user: "{{ master_user }}"
+    host: "{{ hostvars[item].ansible_ssh_host }}"
+    name: "{{ replication_user }}"
+    password: "{{ replication_password }}"
+    priv: "*.*:REPLICATION SLAVE, REPLICATION CLIENT"
+    state: present
+  loop: "{{ groups['slave-servers'] }}"

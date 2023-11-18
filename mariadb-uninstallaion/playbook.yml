@@ -1,0 +1,30 @@
+# playbook.yml
+
+---
+- name: Remove MariadDB
+  hosts: all
+  gather_facts: false
+  become: yes
+  tasks:
+    - name: Stop MariaDB service
+      systemd:
+        name: mariadb
+        state: stopped
+      ignore_errors: yes
+
+    - name: Remove MariaDB package
+      dnf:
+        name: 
+          - mariadb-server-galera
+          - mariadb-server
+        state: absent
+        autoremove: yes
+
+    - name: Delete MariaDB directories and files
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /var/lib/mysql/
+        - /var/log/mysql/
+        - /etc/my.cnf.d/
